@@ -1,5 +1,7 @@
 # Python Project Template
 
+[![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
+
 Шаблон для быстрого старта новых Python-сервисов: FastAPI-приложение с health-проверкой, конфигурация из окружения, структурное логирование, опциональная телеметрия, тесты, ruff/mypy, Dockerfile и devcontainer. Генерация — через [Copier](https://copier.readthedocs.io/).
 
 ## Требования
