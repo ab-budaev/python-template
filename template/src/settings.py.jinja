@@ -1,0 +1,58 @@
+import logging
+from enum import StrEnum
+from functools import lru_cache
+
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class LogLevel(StrEnum):
+    CRITICAL = "CRITICAL"
+    FATAL = "FATAL"
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    WARN = "WARN"
+    INFO = "INFO"
+    DEBUG = "DEBUG"
+    NOTSET = "NOTSET"
+
+    def __int__(self) -> int:
+        return int(getattr(logging, self.name))
+
+    @classmethod
+    def _missing_(cls, value: object) -> "LogLevel | None":
+        if isinstance(value, str):
+            try:
+                return cls[value.upper()]
+            except KeyError:
+                return None
+        return None
+
+
+class ConfigBase(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="UTF-8", extra="ignore")
+
+
+class OtelSettings(ConfigBase):
+    model_config = SettingsConfigDict(env_prefix="OTEL_")
+    sdk_disabled: bool = True
+
+
+class AppSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="UTF-8",
+        extra="ignore",
+        populate_by_name=True,
+    )
+
+    app_name: str = Field(default="{{app_name}}", validation_alias="APP_NAME")
+    app_env: str = Field(default="local", validation_alias="APP_ENV")
+    app_debug: bool = Field(default=False, validation_alias="APP_DEBUG")
+    log_level: LogLevel = Field(default=LogLevel.INFO, validation_alias="LOG_LEVEL")
+    otel: OtelSettings = Field(default_factory=OtelSettings)
+
+
+@lru_cache(maxsize=1)
+def get_settings() -> AppSettings:
+    return AppSettings()

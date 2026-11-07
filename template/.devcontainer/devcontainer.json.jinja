@@ -1,0 +1,36 @@
+{
+	"name": "{{app_name}}",
+	"build": {
+		"dockerfile": "../Dockerfile",
+		"target": "dev",
+		"context": ".."
+	},
+	"workspaceFolder": "/opt/{{app_name}}",
+	"containerEnv": {
+		"PYTHONPATH": "/opt/{{app_name}}/src"
+	},
+	"runArgs": [
+		"--env-file",
+		"${localWorkspaceFolder}/.env",
+		"-p",
+		"8000:8000"
+	],
+	"mounts": [
+		"type=volume,source={{app_name}}-venv,target=/opt/{{app_name}}/.venv",
+		"type=bind,source=${localWorkspaceFolder},target=/opt/{{app_name}}"
+	],
+	"shutdownAction": "stopContainer",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-python.debugpy",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff"
+			]
+		}
+	}
+}

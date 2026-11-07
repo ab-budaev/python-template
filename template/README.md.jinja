@@ -1,0 +1,72 @@
+# {{app_name}}
+
+TODO: добавь описание проекта
+
+## Quick Start
+
+### Зависимости
+
+- [uv](https://docs.astral.sh/uv/)
+- Docker — для запуска в контейнере (опционально)
+- VS Code + Dev Containers — для разработки в контейнере (опционально)
+
+### Настройка окружения
+
+```sh
+uv sync --all-groups          # установить зависимости
+cp .env.example .env          # и поправить под себя
+```
+
+### Запуск
+
+**Локально:**
+
+```sh
+make run          # uvicorn с автоперезагрузкой на :8000
+```
+
+**Через compose:**
+
+```sh
+docker compose up
+```
+
+**В контейнере VS Code:** открой проект и выполни `Dev Containers: Rebuild and Reopen in Container`. Проект будет собран и открыт в изолированном контейнере с возможностью запуска сервера и его отладки.
+
+### Проверка
+
+```sh
+curl localhost:8000/health    # {"status":"ok"}
+```
+
+## Команды
+
+```sh
+make help     # список команд
+make lint     # ruff + mypy
+make fmt      # автоформатирование
+make test     # pytest
+make run      # запуск сервера
+```
+
+## Переменные окружения
+
+См. [.env.example](.env.example). Основные:
+
+- `APP_ENV` — окружение (`local` по умолчанию)
+- `APP_DEBUG` — режим отладки: читаемые логи в консоли (`false`)
+- `LOG_LEVEL` — уровень логирования (`INFO`)
+- `OTEL_SDK_DISABLED` — отключить телеметрию (`true`)
+- `OTEL_EXPORTER_OTLP_ENDPOINT` — OTLP-коллектор (экспорт включается заданием endpoint'а и `OTEL_SDK_DISABLED=false`)
+
+## Структура
+
+```
+src/
+├── api/            # FastAPI-приложение и роутеры
+├── settings.py     # настройки (AppSettings)
+├── log.py          # логирование (structlog)
+├── telemetry.py    # телеметрия (OpenTelemetry)
+└── main.py         # точка входа uvicorn
+tests/              # pytest-тесты
+```

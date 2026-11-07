@@ -1,0 +1,22 @@
+_subdirectory: template
+
+app_name:
+  type: str
+  help: "Имя приложения (kebab-case; используется как имя каталога проекта, Docker-образа и сервиса)"
+  placeholder: my-app
+  validator: >
+    {% if not (app_name | regex_search('^[a-z0-9]+(-[a-z0-9]+)*$')) %}
+    "Имя приложения должно быть в формате kebab-case: my-app"
+    {% endif %}
+
+python_version:
+  type: str
+  help: "Версия Python"
+  default: "3.14"
+  validator: >
+    {% if not (python_version | regex_search('^3\.(1[0-4]|[0-9])$')) %}
+    "Версия Python должна быть в формате 3.x"
+    {% endif %}
+
+_tasks:
+  - uv lock

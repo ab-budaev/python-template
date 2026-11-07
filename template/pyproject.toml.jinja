@@ -1,0 +1,77 @@
+[project]
+name = "{{app_name}}"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">={{python_version}}"
+dependencies = [
+    "fastapi>=0.141",
+    "uvicorn[standard]>=0.52",
+    "pydantic>=2.13",
+    "pydantic-settings>=2.15",
+    "structlog>=26.1",
+    "opentelemetry-sdk>=1.33",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.33",
+    "opentelemetry-instrumentation-fastapi>=0.54b0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-mock",
+    "ruff",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 119
+output-format = "grouped"
+show-fixes = true
+target-version = "py314"
+exclude = [
+    ".svn",
+    "CVS",
+    ".bzr",
+    ".hg",
+    ".git",
+    "__pycache__",
+    ".tox",
+    ".eggs",
+    "*.egg",
+    ".venv",
+    "env",
+    "venv",
+    "build",
+]
+
+[tool.ruff.lint]
+select = ["W", "E", "F", "I", "N", "T20", "Q"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.ruff.lint.mccabe]
+max-complexity = 6
+
+[tool.mypy]
+strict = true
+install_types = true
+non_interactive = true
+python_version = "{{python_version}}"
+mypy_path = ["src"]
+exclude = [".venv", "env", "venv"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["opentelemetry.*", "opentelemetry.instrumentation.*"]
+follow_untyped_imports = true
